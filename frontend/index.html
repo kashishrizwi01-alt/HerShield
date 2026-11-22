@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>HerShield — Mobility &amp; Defense</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+</head>
+
+<body>
+
+<!-- LOGIN SCREEN - PRESERVED -->
+<section id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <div class="login-logo">🛡</div>
+    <div class="brand-title login-brand">Her<span>Shield</span></div>
+    <p class="login-subtitle">MOBILITY &amp; DEFENSE</p>
+
+    <h1>Welcome to HerShield</h1>
+    <p class="login-description">
+      Enter your details to open your safety dashboard.
+    </p>
+
+    <form id="loginForm" novalidate>
+      <label class="input-label-mono" for="loginName">YOUR NAME</label>
+      <input
+        id="loginName"
+        class="field-input"
+        type="text"
+        placeholder="Enter your name"
+        maxlength="50"
+        autocomplete="name"
+        required
+      >
+
+      <label class="input-label-mono" for="loginPhone">MOBILE NUMBER</label>
+      <input
+        id="loginPhone"
+        class="field-input"
+        type="tel"
+        inputmode="numeric"
+        placeholder="10-digit mobile number"
+        maxlength="14"
+        autocomplete="tel"
+        required
+      >
+
+      <p id="loginError" class="login-error" role="alert"></p>
+
+      <button class="btn-purple-gradient" type="submit">
+        CONTINUE TO HERSHIELD
+      </button>
+    </form>
+
+    <p class="login-note">
+      Your mobile number is checked for format,
+      not verified by OTP.
+    </p>
+  </div>
+</section>
+
+<div id="strobeFlashLayer"></div>
+<div id="appToast">Notification</div>
+
+<!-- HEADER -->
+<header class="top-bar">
+  <div class="top-bar-inner">
+
+    <div class="left-brand-group">
+      <button class="icon-btn-plain" onclick="toggleDrawer(true)">☰</button>
+
+      <div
+        style="display:flex;align-items:center;gap:10px"
+        onclick="switchView('home')"
+      >
+        <div class="shield-logo-box">🛡</div>
+
+        <div>
+          <div class="brand-title">Her<span>Shield</span></div>
+          <span class="brand-subtitle">MOBILITY &amp; DEFENSE</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-controls-group">
+      <button class="phone-circle-btn" onclick="window.location.href='tel:112'">☎</button>
+
+      <div class="theme-pill-switcher">
+        <button class="theme-btn active" id="themeBtn-light" onclick="applyTheme('light')">☀</button>
+        <button class="theme-btn" id="themeBtn-dark" onclick="applyTheme('dark')">☾</button>
+        <button class="theme-btn" id="themeBtn-laptop" onclick="toggleLaptopMode()">▣</button>
+      </div>
+    </div>
+
+  </div>
+</header>
+
+<!-- MAIN CONTENT -->
+<main class="main-container">
+
+  <!-- HOME -->
+  <section id="view-home" class="view-section active">
+
+    <div class="hero-card">
+      <h1 class="hero-title">Welcome back, <span id="homeGreetingName">there</span>! 👋</h1>
+
+      <div class="hero-actions">
+        <button class="btn-hero-white" onclick="switchView('hercircle')">
+          ♧ Coordinate HerCircle
+        </button>
+
+        <button class="btn-hero-glass" onclick="switchView('planner')">
+          ➤ Safe Journey Route
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-header-row">
+        <div class="card-kicker">🟢 ACTIVE TRANSIT</div>
+        <span class="pill-eta">ETA 14 min</span>
+      </div>
+
+      <div class="card-divider"></div>
+
+      <div class="transit-point-row">
+        <span class="point-badge-a">A</span>
+        <span id="homeOriginText">South Extension Metro</span>
+      </div>
+
+      <div class="transit-mid-connector">
+        <span class="transit-stage-pill">
+          Current: Metro Yellow Line (Ladies Coach)
+        </span>
+      </div>
+
+      <div class="transit-point-row">
+        <span class="point-badge-b">B</span>
+        <span id="homeDestText">Civil Lines Metro Station</span>
+      </div>
+
+      <div class="gradient-progress-bar">
+        <div class="gradient-progress-fill"></div>
+      </div>
+
+      <button class="btn-pill-soft" onclick="switchView('planner')">
+        Inspect Safe Corridor ›
+      </button>
+    </div>
+
+    <div class="card">
+      <div class="section-header-row">
+        <div class="card-kicker">◷ SAFETY CHECK-IN</div>
+        <span style="font-size:12px;color:var(--purple-violet)">
+          Due in 18m
+        </span>
+      </div>
+
+      <div class="card-divider"></div>
+
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:14px">
+        Check in and choose a trusted contact to notify by SMS. Your messaging app will open for you to send it.
+      </p>
+
+      <div id="checkinButtonWrap">
+        <button class="btn-purple-gradient" onclick="triggerCheckInConfirm()">
+          ✓ TAP "I'M SAFE" NOW
+        </button>
+      </div>
+
+      <div
+        id="checkinConfirmedBanner"
+        style="display:none;padding:13px;background:var(--emerald-bg);color:var(--emerald);border-radius:14px;font-weight:800"
+      >
+        ✓ Check-in saved. Confirm your message was sent in your SMS app.
+      </div>
+
+      <div
+        id="lastVerifiedStamp"
+        style="text-align:center;font-size:11px;color:var(--purple-violet);margin-top:14px"
+      >
+        Last verified: Today at 07:45 PM
+      </div>
+    </div>
+
+    <div class="card card-emergency">
+      <div style="color:var(--sos-red);font-weight:800">
+        EMERGENCY HELP
+      </div>
+
+      <p style="font-size:13px;color:var(--text-muted)">
+        Open emergency tools, sound an alarm, or contact emergency services.
+      </p>
+
+      <button class="sos-circle-btn" onclick="startSosSequence()">SOS</button>
+    </div>
+
+    <div class="card">
+      <h3 id="homeActiveFriendsTitle">HerCircle Active Friends (3)</h3>
+
+      <p style="font-size:12px;color:var(--text-muted);margin:5px 0 12px">
+        Friend locations appear only when a friend shares their coordinates through a connected session.
+      </p>
+
+      <button class="btn-pill-soft" onclick="openModal('addFriendModal')">
+        + Add Friend
+      </button>
+
+      <button class="btn-pill-solid" onclick="switchView('hercircle')">
+        Open Live Map →
+      </button>
+
+      <div id="homeFriendsListContainer"></div>
+    </div>
+
+  </section>
+
+  <!-- HERCIRCLE -->
+  <section id="view-hercircle" class="view-section">
+
+    <h2 class="page-title">HerCircle Coordination Hub</h2>
+
+    <p class="page-subtitle">
+      Friends must share their location for live map tracking.
+      You always retain complete control.
+    </p>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+
+      <button
+        class="btn-pill-soft"
+        id="ghostToggleBtn"
+        onclick="toggleGhostState()"
+      >
+        <span id="ghostToggleText">Ghost Mode: OFF</span>
+      </button>
+
+      <button class="btn-pill-solid" onclick="openModal('addFriendModal')">
+        + Add Friend
+      </button>
+
+      <button class="btn-pill-soft" onclick="openModal('groupPlanModal')">
+        + Group Plan
+      </button>
+
+    </div>
+
+    <div class="radar-map-container">
+
+      <div id="circleMap" class="leaflet-map"></div>
+      <div class="map-controls"><button type="button" onclick="drawMeetupMap()">↗ Show meetup paths</button></div>
+
+      <div id="circleMapPinsLayer" style="display:none"></div>
+
+      <div class="map-bottom-overlay">
+        <div>
+          <small>ACTIVE GROUP PLAN</small>
+
+          <div id="groupPlanNameText" style="font-weight:900">
+            Friday Late Night Outing
+          </div>
+
+          <small id="groupPlanTargetText">
+            Target: Kashmere Gate Metro Station • 05:30 PM
+          </small>
+        </div>
+
+        <button
+          class="btn-sync-glass"
+          onclick="renderHerCircleMapMarkers();drawMeetupMap()"
+        >
+          Refresh Map
+        </button>
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <h3 id="squadDirectoryCount">Squad Directory (4)</h3>
+
+      <div id="squadDirectoryList"></div>
+
+      <div class="card-divider"></div>
+
+      <div class="input-label-mono">AUTO-SHARE DURATION LIMIT</div>
+
+      <div class="duration-grid">
+        <button class="dur-pill-btn" onclick="selectDuration(this,'15 mins')">
+          15 mins
+        </button>
+
+        <button class="dur-pill-btn active" onclick="selectDuration(this,'1 hour')">
+          1 hour
+        </button>
+
+        <button class="dur-pill-btn" onclick="selectDuration(this,'Until stopped')">
+          Until stopped
+        </button>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- SMART JOURNEY PLANNER - UPDATED -->
+  <section id="view-planner" class="view-section">
+
+    <h2 class="page-title">Smart Journey Planner</h2>
+
+    <p class="page-subtitle">
+      Find available public-transport connections and walking segments
+      for your selected journey.
+    </p>
+
+    <div class="card">
+
+      <h3>Plan Your Journey</h3>
+
+      <label class="input-label-mono" for="plannerOriginInput">
+        ORIGIN
+      </label>
+
+      <input
+        id="plannerOriginInput"
+        class="field-input"
+        type="text"
+        value="Kashmere Gate Metro Station"
+        placeholder="Enter starting location"
+        autocomplete="off"
+        oninput="syncPlannerEndpoints()"
+      >
+
+      <div id="originSuggestions" class="location-suggestions"></div>
+      <button class="btn-pill-soft" type="button" onclick="useCurrentLocation()" style="margin:-6px 0 16px">📍 Use My Current Location</button>
+      <label class="input-label-mono" for="plannerDestInput">
+        DESTINATION
+      </label>
+
+      <input
+        id="plannerDestInput"
+        class="field-input"
+        type="text"
+        value="Civil Lines Metro Station"
+        placeholder="Enter destination"
+        autocomplete="off"
+        oninput="syncPlannerEndpoints()"
+      >
+
+      <div id="destinationSuggestions" class="location-suggestions"></div>
+      <button
+        id="findRouteButton"
+        class="btn-purple-gradient"
+        type="button"
+        onclick="findJourneyRoute()"
+      >
+        FIND ROUTE
+      </button>
+
+      <button class="btn-pill-soft" type="button" onclick="findJourneyRoute(true)">BACKUP ROUTE ESTIMATES</button>
+      <p
+        id="routeStatus"
+        role="status"
+        aria-live="polite"
+        style="font-size:12px;color:var(--purple-violet);margin:12px 0"
+      >
+        Enter your locations and select FIND ROUTE.
+      </p>
+
+      <div
+        id="routeSummary"
+        style="font-weight:800;font-size:13px;margin:10px 0"
+      >
+        No route calculated yet
+      </div>
+
+      <div
+        id="routeAlternatives"
+        style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0"
+      ></div>
+
+      <div class="card-divider"></div>
+
+      <div class="section-header-row">
+
+        <label class="input-label-mono">
+          AVAILABLE TRANSIT STAGES
+        </label>
+
+        <button
+          class="btn-pill-soft"
+          type="button"
+          onclick="openModal('addStageModal')"
+        >
+          + Add Note
+        </button>
+
+      </div>
+
+      <div id="transitStagesList">
+        <p style="font-size:12px;color:var(--text-muted)">
+          Your calculated transport and walking segments will appear here.
+        </p>
+      </div>
+
+      <button
+        class="btn-pill-soft"
+        type="button"
+        onclick="openShareLinkModal()"
+      >
+        SHARE JOURNEY LINK
+      </button>
+
+      <div class="card" style="margin-top:14px">
+        <strong>Hazards near selected route</strong>
+        <p id="routeHazards" style="font-size:12px;margin-top:8px">Calculate a route to see coordinate-based reports where available.</p>
+      </div>
+    </div>
+
+    <div class="radar-map-container" id="plannerMapShell" style="height:420px">
+
+      <div id="plannerMap" class="leaflet-map"></div>
+      <div class="map-controls"><button type="button" onclick="toggleMapExpanded()" id="expandMapBtn">⛶ Expand map</button></div>
+      <div class="transport-legend"><span><i style="background:#22c55e"></i> Walk</span><span><i style="background:#3b82f6"></i> Metro</span><span><i style="background:#facc15"></i> Vehicle</span><span>Traffic: not connected</span></div>
+
+      <div class="map-bottom-overlay">
+        <div>
+          <small>JOURNEY ROUTE</small>
+          <div style="font-weight:900">Journey Route Map</div>
+        </div>
+
+        <b>Journey Planner</b>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- SAFEZONE -->
+  <section id="view-safezone" class="view-section">
+
+    <div class="sub-pill-bar">
+
+      <button
+        class="sub-pill-btn active"
+        id="subTabBtn-directory"
+        onclick="switchSafeSubTab('directory')"
+      >
+        🛡 SafeZone Directory
+      </button>
+
+      <button
+        class="sub-pill-btn"
+        id="subTabBtn-reviews"
+        onclick="switchSafeSubTab('reviews')"
+      >
+        ⭐ SafeStay Reviews
+      </button>
+
+      <button
+        class="sub-pill-btn"
+        id="subTabBtn-hazards"
+        onclick="switchSafeSubTab('hazards')"
+      >
+        ⚠ Hazards
+      </button>
+
+    </div>
+
+    <div id="safeSub-directory">
+
+      <h2 class="page-title">Nearby Places Directory</h2>
+
+      <p class="page-subtitle">
+        Sample directory listings. Please verify addresses,
+        phone numbers and availability independently.
+      </p>
+
+      <p id="nearbyPlaceStatus" class="page-subtitle">Select a journey to discover places near your route. Listings are not safety certifications.</p>
+      <p class="page-subtitle">Starter listings are for the Kashmere Gate demonstration; availability and contact details require verification.</p><div id="safeZoneDirectoryCards"></div>
+
+    </div>
+
+    <div id="safeSub-reviews" style="display:none">
+
+      <div class="section-header-row">
+        <h2 class="page-title">SafeStay Place Reviews</h2>
+
+        <button
+          class="btn-pill-solid"
+          onclick="openModal('writeReviewModal')"
+        >
+          + Write Review
+        </button>
+      </div>
+
+      <p class="page-subtitle">
+        Community experiences, not official certifications.
+      </p>
+
+      <div id="safeStayReviewsContainer"></div>
+
+    </div>
+
+    <div id="safeSub-hazards" style="display:none">
+
+      <div class="section-header-row">
+        <h2 class="page-title">Community Safety Reports</h2>
+
+        <button
+          class="btn-pill-solid"
+          onclick="openModal('reportHazardModal')"
+        >
+          + Report Hazard
+        </button>
+      </div>
+
+      <p class="page-subtitle">Reports are community-submitted and unverified. To pin a report, click its location on the Journey Planner map before submitting.</p>
+      <div id="hazardReportsContainer"></div>
+
+    </div>
+
+  </section>
+
+</main>
+
+<!-- BOTTOM NAVIGATION -->
+<nav class="bottom-dock">
+  <div class="bottom-dock-inner">
+
+    <button class="dock-tab active" data-view="home" onclick="switchView('home')">
+      ⌂<span>Home</span>
+    </button>
+
+    <button class="dock-tab" data-view="hercircle" onclick="switchView('hercircle')">
+      ♧<span>Circle</span>
+    </button>
+
+    <button class="dock-sos-center" onclick="startSosSequence()">
+      SOS
+    </button>
+
+    <button class="dock-tab" data-view="planner" onclick="switchView('planner')">
+      ➤<span>Transit</span>
+    </button>
+
+    <button class="dock-tab" data-view="safezone" onclick="switchView('safezone')">
+      ⌖<span>Safe</span>
+    </button>
+
+  </div>
+</nav>
+
+<!-- SIDE DRAWER -->
+<div
+  id="drawerBackdrop"
+  class="drawer-backdrop"
+  onclick="toggleDrawer(false)"
+></div>
+
+<aside id="sideDrawer" class="side-drawer">
+
+  <div class="section-header-row">
+    <b>
+      <span id="drawerUserName">Your profile</span>
+    </b>
+
+    <button class="icon-btn-plain" onclick="toggleDrawer(false)">
+      ✕
+    </button>
+  </div>
+
+  <div class="card">
+
+    <div class="section-header-row">
+      <b>TRUSTED CIRCLE</b>
+
+      <button
+        class="btn-pill-soft"
+        onclick="openModal('addGuardianModal')"
+      >
+        + Add
+      </button>
+    </div>
+
+    <div id="drawerGuardiansList"></div>
+
+  </div>
+
+  <div class="card">
+    <b>📳 Shake-to-SOS</b>
+
+    <p style="font-size:11px;color:var(--text-muted)">
+      On supported mobile browsers, shaking can open the SOS screen. Alerts require your confirmation.
+    </p>
+
+    <input type="checkbox" id="shakeSosCheckbox" checked>
+  </div>
+
+  <div class="card">
+    <b>NOTIFICATION CENTRE</b>
+    <div id="notificationCentreEntries" aria-live="polite"><p>No new notifications.</p></div>
+  </div>
+
+  <button
+    class="btn-pill-soft"
+    style="color:var(--sos-red)"
+    onclick="revokeAllSharing()"
+  >
+    🔒 Master Killswitch: Stop All Location Sharing
+  </button>
+
+  <button
+    class="btn-pill-soft"
+    style="margin-top:12px;width:100%"
+    onclick="logoutHerShield()"
+  >
+    ↩ Log out
+  </button>
+
+</aside>
+
+<!-- FAKE CALL OVERLAY -->
+<div
+  id="fakeCallOverlay"
+  class="fullscreen-overlay"
+  style="background:#08060cf8;text-align:center"
+>
+  <div>
+    <div class="shield-logo-box" style="margin:40px auto">AS</div>
+
+    <h2>Inspector Aditi Sharma</h2>
+
+    <p id="fakeCallStatusLine">
+      Incoming Priority Security Call...
+    </p>
+
+    <p class="card" style="color:var(--text-main);margin-top:30px">
+      "Yes Officer, I'm right outside the central plaza building
+      near the main street corner. I can already see your patrol cruiser lights."
+    </p>
+  </div>
+
+  <div>
+    <button class="sos-circle-btn" onclick="closeFakeCallOverlay()">
+      Hang up
+    </button>
+
+    <button
+      class="btn-pill-solid"
+      id="fakeCallAnswerBtn"
+      onclick="connectFakeCall()"
+    >
+      Answer
+    </button>
+  </div>
+</div>
+
+<!-- SOS OVERLAY -->
+<div
+  id="sosOverlayScreen"
+  class="fullscreen-overlay"
+  style="background:#21142dfc;justify-content:center;align-items:center;text-align:center"
+>
+
+  <div id="sosStepCountdown">
+
+    <div
+      id="sosCountdownDigit"
+      style="font-size:60px;color:#E53950;font-weight:900"
+    >
+      3
+    </div>
+
+    <h2>Emergency SOS Countdown</h2>
+
+    <p style="margin:15px 0">
+      The alarm plays locally. To reach help, use the emergency call or SMS actions.
+    </p>
+
+    <button class="btn-pill-soft" onclick="standDownSos()">
+      CANCEL — I'M SAFE
+    </button>
+
+  </div>
+
+  <div id="sosStepActive" style="display:none">
+
+    <h2>SOS TOOLS ACTIVE</h2>
+
+    <p style="margin:15px">
+      Call emergency services directly or send your location to a trusted contact.
+    </p>
+
+    <p>
+      <a href="tel:112" style="color:white">📞 Call 112</a>
+      ·
+      <a href="tel:1091" style="color:white">1091 Helpline</a>
+    </p>
+
+    <p style="margin:15px">
+
+      <button
+        id="sirenToggleBtn"
+        class="btn-pill-solid"
+        onclick="toggleLoudSiren()"
+      >
+        <span id="sirenBtnText">🔊 Turn On Siren</span>
+      </button>
+
+      <button
+        id="strobeToggleBtn"
+        class="btn-pill-solid"
+        onclick="toggleStrobeFlash()"
+      >
+        <span id="strobeBtnText">Flash Screen</span>
+      </button>
+
+    </p>
+
+    <button class="btn-pill-soft" onclick="standDownSos()">
+      I Am Safe Now
+    </button>
+
+  </div>
+
+</div>
+
+<!-- ADD FRIEND MODAL -->
+<div id="addFriendModal" class="modal-overlay">
+  <div class="modal-card">
+
+    <div class="section-header-row">
+      <h3>Add Friend to HerCircle</h3>
+      <button class="icon-btn-plain" onclick="closeModal('addFriendModal')">✕</button>
+    </div>
+
+    <label class="input-label-mono">FRIEND NAME</label>
+    <input id="inputFriendName" class="field-input" placeholder="e.g. Tanvi Mehta">
+
+    <label class="input-label-mono">USERNAME OR PHONE</label>
+    <input id="inputFriendHandle" class="field-input" placeholder="Phone number (for SMS alerts)">
+
+    <button class="btn-purple-gradient" onclick="submitNewFriend()">
+      SEND MUTUAL INVITE
+    </button>
+
+  </div>
+</div>
+
+<!-- GROUP PLAN MODAL -->
+<div id="groupPlanModal" class="modal-overlay">
+  <div class="modal-card">
+
+    <div class="section-header-row">
+      <h3>Create Group Outing Plan</h3>
+      <button class="icon-btn-plain" onclick="closeModal('groupPlanModal')">✕</button>
+    </div>
+
+    <label class="input-label-mono">PLAN NAME</label>
+    <input id="inputPlanName" class="field-input" value="Kashmere Gate Friends Meetup">
+
+    <label class="input-label-mono">MEETING POINT &amp; TIME</label>
+    <input id="inputPlanTarget" class="field-input" value="Kashmere Gate Metro Station • 05:30 PM">
+
+    <button class="btn-purple-gradient" onclick="submitGroupPlan()">
+      PUBLISH GROUP PLAN
+    </button>
+
+  </div>
+</div>
+
+<!-- ADD TRANSIT STAGE MODAL -->
+<div id="addStageModal" class="modal-overlay">
+  <div class="modal-card">
+
+    <div class="section-header-row">
+      <h3>Add Safe Transit Stage</h3>
+      <button class="icon-btn-plain" onclick="closeModal('addStageModal')">✕</button>
+    </div>
+
+    <label class="input-label-mono">TRANSPORT MODE</label>
+    <input id="inputStageMode" class="field-input">
+
+    <label class="input-label-mono">SAFETY NOTE</label>
+    <input id="inputStageNote" class="field-input">
+
+    <button class="btn-purple-gradient" onclick="submitNewStage()">
+      ADD TO JOURNEY
+    </button>
+
+  </div>
+</div>
+
+<!-- SHARE JOURNEY MODAL -->
+<div id="shareLinkModal" class="modal-overlay">
+  <div class="modal-card">
+
+    <div class="section-header-row">
+      <h3>Share Journey</h3>
+      <button class="icon-btn-plain" onclick="closeModal('shareLinkModal')">✕</button>
+    </div>
+
+    <p style="font-size:12px;color:var(--text-muted);margin:10px 0">
+      This journey link shares the planned route, not your live location.
+    </p>
+
+    <div id="shareUrlBox" style="word-break:break-all;margin:10px 0"></div>
+
+    <button class="btn-purple-gradient" onclick="copyJourneyLink()">
+      COPY LINK
+    </button>
+
+  </div>
+</div>
+
+<!-- ADD GUARDIAN MODAL -->
+<div id="addGuardianModal" class="modal-overlay">
+  <div class="modal-card">
+
+    <div class="section-header-row">
+      <h3>Add Emergency Guardian</h3>
+      <button class="icon-btn-plain" onclick="closeModal('addGuardianModal')">✕</button>
+    </div>
+
+    <label class="input-label-mono">FULL NAME</label>
+    <input id="inputGuardName" class="field-input">
+
+    <label class="input-label-mono">PHONE NUMBER</label>
+    <input id="inputGuardPhone" class="field-input">
+
+    <button class="btn-purple-gradient" onclick="submitNewGuardian()">
+      SAVE CONTACT
+    </button>
+
+  </div>
+</div>
+
+<!-- SAFESTAY REVIEW MODAL -->
+<div id="writeReviewModal" class="modal-overlay">
+  <div class="modal-card">
+
+    <div class="section-header-row">
+      <h3>Submit SafeStay Review</h3>
+      <button class="icon-btn-plain" onclick="closeModal('writeReviewModal')">✕</button>
+    </div>
+
+    <label class="input-label-mono">PLACE NAME</label>
+    <input id="inputRevPlace" class="field-input">
+
+    <label class="input-label-mono">CATEGORY</label>
+    <input id="inputRevCat" class="field-input" value="PGs & Hostels">
+
+    <label class="input-label-mono">REVIEW</label>
+    <input id="inputRevComment" class="field-input">
+
+    <button class="btn-purple-gradient" onclick="submitNewReview()">
+      POST REVIEW
+    </button>
+
+  </div>
+</div>
+
+<!-- REPORT HAZARD MODAL -->
+<div id="reportHazardModal" class="modal-overlay">
+  <div class="modal-card">
+
+    <div class="section-header-row">
+      <h3>Report Street Hazard</h3>
+      <button class="icon-btn-plain" onclick="closeModal('reportHazardModal')">✕</button>
+    </div>
+
+    <label class="input-label-mono">HAZARD TYPE</label>
+    <input
+      id="inputHazardType"
+      class="field-input"
+      value="Broken Streetlight / Unlit Stretch"
+    >
+
+    <label class="input-label-mono">LOCATION</label>
+    <input id="inputHazardLoc" class="field-input">
+
+    <label class="input-label-mono">DETAILS</label>
+    <input id="inputHazardDesc" class="field-input">
+
+    <button class="btn-purple-gradient" onclick="submitNewHazard()">
+      SUBMIT REPORT
+    </button>
+
+  </div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+<script src="js/app.js" defer></script>
+
+</body>
+</html>

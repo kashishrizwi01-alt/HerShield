@@ -1,0 +1,170 @@
+:root{--bg-main:#F5EFFB;--bg-card:#fff;--bg-subtle:#F8F4FC;--bg-header:rgba(255,255,255,.94);--text-main:#291B35;--text-muted:#6E6680;--border-color:#E8DDF5;--purple-primary:#7136A8;--purple-deep:#542080;--purple-violet:#9255C7;--lavender-pill:#EFE6FA;--pink-accent:#E9A2C4;--sos-red:#E53950;--sos-border:rgba(229,57,80,.28);--emerald:#10B981;--emerald-bg:rgba(16,185,129,.12);--amber:#F59E0B;--shadow-card:0 6px 24px rgba(84,32,128,.06);--map-bg:#F3EBF9;--map-dot:rgba(113,54,168,.2)}
+body.dark-mode{--bg-main:#191024;--bg-card:#241734;--bg-subtle:#2E1E42;--bg-header:rgba(25,16,36,.94);--text-main:#F5EFFB;--text-muted:#B5A4C9;--border-color:#3D2856;--purple-primary:#9255C7;--purple-deep:#7136A8;--lavender-pill:#35234C;--sos-border:rgba(229,57,80,.4);--shadow-card:0 8px 28px rgba(0,0,0,.4);--map-bg:#140C1D;--map-dot:rgba(146,85,199,.25)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+body{background:var(--bg-main);color:var(--text-main);min-height:100vh;padding-bottom:96px;transition:.25s;overflow-x:hidden;line-height:1.45}
+button,input{font:inherit}button{cursor:pointer}
+.top-bar{position:sticky;top:0;z-index:40;background:var(--bg-header);backdrop-filter:blur(16px);border-bottom:1px solid var(--border-color);padding:12px 16px}
+.top-bar-inner{max-width:540px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.left-brand-group,.right-controls-group{display:flex;align-items:center;gap:9px}
+.icon-btn-plain{background:transparent;border:0;color:var(--purple-primary);width:36px;height:36px;border-radius:10px;display:grid;place-items:center}
+.shield-logo-box{width:40px;height:40px;border-radius:13px;background:linear-gradient(135deg,#542080,#7136A8,#9255C7);display:grid;place-items:center;color:white;font-size:22px}
+.brand-title{font-size:20px;font-weight:900;line-height:1.05}.brand-title span{color:var(--purple-primary)}.brand-subtitle{font-size:9.5px;font-weight:800;letter-spacing:1.4px;color:var(--purple-violet)}
+.phone-circle-btn,.theme-btn{border:1px solid var(--border-color);background:var(--lavender-pill);color:var(--purple-primary);border-radius:12px;width:36px;height:36px}
+.theme-pill-switcher{display:flex;background:var(--bg-subtle);border:1px solid var(--border-color);border-radius:13px;padding:3px;gap:2px}.theme-btn{width:30px;height:30px;border:0;background:transparent}.theme-btn.active{background:var(--bg-card);box-shadow:0 2px 6px #0002}
+.main-container{max-width:540px;margin:auto;padding:18px 16px}.view-section{display:none;animation:fadeIn .22s}.view-section.active{display:block}@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.card{background:var(--bg-card);border:1px solid var(--border-color);border-radius:26px;padding:22px 20px;box-shadow:var(--shadow-card);margin-bottom:18px}.card-divider{height:1px;background:var(--border-color);margin:14px 0;opacity:.65}
+.hero-card{background:linear-gradient(135deg,#542080,#7136A8 55%,#9255C7);border-radius:28px;padding:26px 22px;color:white;margin-bottom:20px;box-shadow:0 12px 30px #5420803d}
+.hero-badge,.pill-tag,.pill-eta{display:inline-flex;align-items:center;border-radius:99px;padding:5px 11px;font-size:11px;font-weight:800}.hero-badge{background:#ffffff29;margin-bottom:12px}.hero-title{font-size:28px;font-weight:900;margin-bottom:8px}.hero-desc{font-size:13.5px;color:#f5effb;margin-bottom:18px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:10px}.btn-hero-white,.btn-hero-glass{padding:11px 16px;border-radius:16px;font-size:12.5px;font-weight:800;border:0}.btn-hero-white{background:white;color:#542080}.btn-hero-glass{background:#ffffff29;color:white;border:1px solid #ffffff40}
+.section-header-row{display:flex;align-items:center;justify-content:space-between;gap:8px}.card-kicker,.input-label-mono{font-size:11px;font-weight:800;letter-spacing:.8px;color:var(--purple-primary)}.page-title{font-size:24px;font-weight:900}.page-subtitle{font-size:12.5px;color:var(--text-muted);margin:4px 0 16px}
+.pill-eta{background:var(--emerald-bg);color:var(--emerald)}.pill-tag{background:var(--lavender-pill);color:var(--purple-primary);border-radius:8px}
+.transit-point-row{display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:700}.point-badge-a,.point-badge-b{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;font-size:11px;font-weight:900}.point-badge-a{background:var(--lavender-pill);color:var(--purple-primary)}.point-badge-b{background:#e539501f;color:var(--sos-red)}.transit-mid-connector{margin:6px 0 6px 11px;padding:6px 0 6px 14px;border-left:2px dashed #9255c777}.transit-stage-pill{display:inline-block;background:var(--lavender-pill);color:var(--purple-violet);font-size:11px;padding:4px 10px;border-radius:8px}.gradient-progress-bar{height:7px;background:var(--lavender-pill);border-radius:99px;overflow:hidden;margin:18px 0 14px}.gradient-progress-fill{width:66%;height:100%;background:linear-gradient(90deg,#7136A8,#E9A2C4)}
+.btn-purple-gradient,.btn-pill-solid{border:0;background:linear-gradient(90deg,#7136A8,#9255C7);color:white;font-size:12.5px;font-weight:800;border-radius:16px;padding:13px 18px}.btn-purple-gradient{width:100%;text-transform:uppercase;letter-spacing:.5px}.btn-pill-soft{padding:9px 15px;border:0;border-radius:13px;background:var(--lavender-pill);color:var(--purple-deep);font-size:12.5px;font-weight:800}.btn-pill-solid{padding:9px 15px;border-radius:13px}
+.card-emergency{text-align:center;border-color:var(--sos-border)}.sos-circle-btn,.dock-sos-center{border:0;border-radius:50%;background:linear-gradient(135deg,#E53950,#EB6B9D);color:white;font-weight:900;box-shadow:0 8px 22px #e539506b}.sos-circle-btn{width:72px;height:72px;margin:14px auto 4px}
+.friend-item-card,.stage-row-card{background:var(--bg-subtle);border:1px solid var(--border-color);border-radius:17px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;margin-top:10px}.friend-left{display:flex;align-items:center;gap:12px}.avatar-wrap{position:relative;width:44px;height:44px;flex-shrink:0}.avatar-img{width:44px;height:44px;object-fit:cover;border-radius:50%;border:2px solid #7136A8}.status-dot{position:absolute;bottom:0;right:0;width:11px;height:11px;border-radius:50%;border:2px solid var(--bg-card)}.friend-name{font-size:14px;font-weight:800}.friend-meta{font-size:11.5px;color:var(--purple-violet);margin-top:2px}.battery-badge{font-size:12px;color:var(--text-muted)}
+.radar-map-container{height:400px;border-radius:26px;border:1px solid var(--border-color);background-color:var(--map-bg);background-image:radial-gradient(var(--map-dot) 1.5px,transparent 1.5px);background-size:26px 26px;position:relative;overflow:hidden;margin-bottom:18px;display:flex;flex-direction:column;justify-content:flex-end}.map-pin-node{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;z-index:5;cursor:pointer}.map-pin-tooltip{background:var(--bg-card);color:var(--text-main);border:1px solid #7136A859;padding:4px 10px;border-radius:10px;font-size:11px;font-weight:800;white-space:nowrap;margin-bottom:5px}.meetup-center-badge{background:#E53950;color:white;padding:5px 13px;border-radius:99px;font-size:11px;font-weight:900;white-space:nowrap}.meetup-center-ring{width:22px;height:22px;border-radius:50%;background:#e5395047;border:2px solid #E53950;display:grid;place-items:center;margin-top:5px}.meetup-center-dot{width:8px;height:8px;border-radius:50%;background:white}.map-bottom-overlay{position:relative;z-index:10;background:linear-gradient(to top,#291b35f5,#291b35d1,transparent);padding:32px 18px 16px;color:white;display:flex;align-items:flex-end;justify-content:space-between;gap:12px}.btn-sync-glass{background:#ffffff33;border:1px solid #ffffff40;color:white;padding:8px 14px;border-radius:14px;font-size:12px}
+.duration-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.dur-pill-btn{padding:10px 8px;border-radius:14px;border:1px solid var(--border-color);background:transparent;color:var(--text-muted);font-size:12px}.dur-pill-btn.active,.sub-pill-btn.active{background:#7136A8;color:white}
+.field-input{width:100%;padding:13px 15px;border-radius:15px;border:1px solid var(--border-color);background:var(--bg-card);color:var(--text-main);font-size:13.5px;margin:6px 0 16px;outline:none}.input-label-mono{display:block;text-transform:uppercase;margin-bottom:4px}.stage-row-card{background:var(--lavender-pill)}.stage-num-circle{width:24px;height:24px;border-radius:50%;background:#7136A8;color:white;display:grid;place-items:center;font-size:11px}
+.bottom-dock{position:fixed;bottom:0;left:0;right:0;z-index:45;background:var(--bg-header);backdrop-filter:blur(18px);border-top:1px solid var(--border-color);padding:6px 12px 10px}.bottom-dock-inner{max-width:540px;margin:auto;display:flex;align-items:center;justify-content:space-around}.dock-tab{background:none;border:0;color:var(--purple-violet);opacity:.72;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 12px}.dock-tab.active{color:var(--purple-primary);opacity:1;font-weight:800}.dock-sos-center{width:50px;height:50px;margin-top:-18px}
+.drawer-backdrop,.modal-overlay{display:none;position:fixed;inset:0;background:#191024b3;backdrop-filter:blur(6px);z-index:80}.drawer-backdrop.open{display:block}.side-drawer{position:fixed;top:0;left:0;bottom:0;width:86%;max-width:360px;z-index:85;background:var(--bg-card);border-right:1px solid var(--border-color);padding:22px 18px;overflow:auto;transform:translateX(-100%);transition:transform .25s}.side-drawer.open{transform:translateX(0)}.modal-overlay{z-index:90;align-items:center;justify-content:center;padding:18px}.modal-overlay.open{display:flex}.modal-card{background:var(--bg-card);color:var(--text-main);border:1px solid var(--border-color);border-radius:26px;width:100%;max-width:440px;padding:22px;max-height:88vh;overflow:auto}
+.fullscreen-overlay{display:none;position:fixed;inset:0;z-index:100;flex-direction:column;justify-content:space-between;padding:36px 22px 42px;color:white}.fullscreen-overlay.open{display:flex}.sub-pill-bar{display:flex;gap:8px;overflow:auto;margin-bottom:16px}.sub-pill-btn{padding:8px 14px;border-radius:12px;border:1px solid var(--border-color);background:var(--bg-card);color:var(--text-muted);font-size:12px;font-weight:800;white-space:nowrap}
+#appToast{position:fixed;top:74px;left:50%;transform:translateX(-50%);z-index:120;background:#291B35;color:white;border:1px solid #9255C7;padding:10px 18px;border-radius:99px;font-size:12px;display:none;white-space:nowrap}
+#strobeFlashLayer{display:none;position:fixed;inset:0;z-index:95;pointer-events:none;animation:blink .25s infinite}@keyframes blink{50%{background:#ffffff8c}}
+body.laptop-mode .top-bar-inner,body.laptop-mode .main-container{max-width:980px}body.laptop-mode #view-home{display:grid;grid-template-columns:1fr 1fr;gap:18px}body.laptop-mode #view-home .hero-card{grid-column:span 2}body.laptop-mode .radar-map-container{height:480px}body.laptop-mode .bottom-dock{max-width:600px;left:50%;transform:translateX(-50%);border:1px solid var(--border-color);border-radius:24px 24px 0 0}
+@media(max-width:380px){.brand-title{font-size:17px}.phone-circle-btn{display:none}.card{padding:18px 15px}.dock-tab{padding:6px 7px}}
+/* Leaflet Maps */
+.leaflet-map {
+    width: 100%;
+    height: 100%;
+    min-height: 320px;
+    border-radius: inherit;
+    z-index: 1;
+}
+
+.radar-map-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.map-bottom-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 500;
+}
+
+/* Fix Leaflet map tiles and zoom controls */
+
+
+.leaflet-control-container {
+    z-index: 1000;
+}
+/* HerShield Leaflet map sizing fix */
+#circleMap,
+#plannerMap {
+    width: 100%;
+    height: 100%;
+    min-height: 320px;
+}
+
+.leaflet-container {
+    position: relative;
+    overflow: hidden;
+}
+/* HerShield Login Screen */
+.login-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: var(--bg-main);
+    overflow-y: auto;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    padding: 30px 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 28px;
+    box-shadow: var(--shadow-card);
+    text-align: center;
+}
+
+.login-logo {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 12px;
+    border-radius: 20px;
+    display: grid;
+    place-items: center;
+    color: white;
+    font-size: 32px;
+    background: linear-gradient(135deg,#542080,#9255C7);
+}
+
+.login-brand { font-size: 27px; }
+.login-subtitle {
+    color: var(--purple-violet);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin: 5px 0 28px;
+}
+
+.login-card h1 {
+    font-size: 23px;
+    margin-bottom: 8px;
+}
+
+.login-description,
+.login-note {
+    color: var(--text-muted);
+    font-size: 12px;
+    margin-bottom: 22px;
+}
+
+.login-card form { text-align: left; }
+.login-card .field-input { margin-bottom: 17px; }
+
+.login-error {
+    color: var(--sos-red);
+    font-size: 12px;
+    min-height: 18px;
+    margin-bottom: 8px;
+}
+
+.login-note { margin: 18px 0 0; }
+
+body:not(.logged-in) > header,
+body:not(.logged-in) > main,
+body:not(.logged-in) > nav,
+body:not(.logged-in) > #drawerBackdrop,
+body:not(.logged-in) > #sideDrawer {
+    display: none !important;
+}
+
+body.logged-in .login-screen {
+    display: none;
+}
+/* Keep inactive sections hidden in laptop mode */
+body.laptop-mode #view-home:not(.active){display:none}
+
+/* Her Shield 3 — map accessibility and transport styling */
+.map-controls{position:absolute;right:12px;top:12px;z-index:1100}.map-controls button{background:#fff;color:#462273;border:1px solid #ddd;border-radius:12px;padding:10px 13px;font-weight:800;cursor:pointer;box-shadow:0 2px 10px #0002}
+.transport-legend{position:absolute;z-index:1100;left:12px;bottom:100px;display:flex;gap:8px;flex-wrap:wrap;background:#fffffff0;padding:8px 10px;border-radius:12px;color:#34213d;font-size:12px;font-weight:700}
+.transport-legend span{display:flex;align-items:center;gap:5px}.transport-legend i{display:inline-block;width:18px;height:5px;border-radius:4px}
+.radar-map-container.map-expanded{position:fixed!important;inset:15px!important;width:auto!important;height:auto!important;z-index:9999;border-radius:18px}
+.radar-map-container.map-expanded .leaflet-map{height:100%!important}
+.hs-transport-pin span{background:white;border:2px solid #7136a8;border-radius:50%;padding:4px;box-shadow:0 2px 8px #0004}
+.location-suggestions{display:grid;gap:2px;max-height:210px;overflow:auto;margin:-8px 0 12px}
+.location-suggestions button{padding:9px 12px;border:1px solid var(--border-color);background:var(--bg-card);color:var(--text-main);text-align:left;border-radius:8px;cursor:pointer}
+body.laptop-mode #view-home:not(.active){display:none}
+
+/* Her Shield 5: preserve welcome card and correct laptop navigation */
+body.laptop-mode #view-home:not(.active){display:none}
